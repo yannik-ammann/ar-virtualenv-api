@@ -98,3 +98,7 @@ False
 
 Verbose output from each command is available in the environment's `build.log`
 file, which is appended to with each operation. Any errors are logged to `build.err`.
+
+
+# Credits
+virtualenv-api was initally developed by Sam Kingston, adopted and adapted by arteria GmbH. The current fork has backwards compatibility and comes with a lot of new features that builds the base for [#](TODO-add virtualenv-mgr) link.
