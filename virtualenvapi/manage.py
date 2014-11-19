@@ -161,10 +161,8 @@ class VirtualEnvironment(object):
                 if not self.is_installed(n):
                     package.remove(n)
                     self._write_to_log('%s is not installed, skipping' % n)
-            if not package:
-                return
             try:
-                self._execute([self._pip_rpath, 'uninstall', '-y'] + package)
+                self._executef([self._pip_rpath, 'uninstall', '-y'] + package)
             except subprocess.CalledProcessError as e:
                 raise PackageRemovalException((e.returncode, e.output, package))
             return
