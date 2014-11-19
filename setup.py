@@ -1,12 +1,12 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='virtualenv-api',
+    name='ar-virtualenv-api',
     version='2.0.0',
     license='BSD',
-    author='Sam Kingston',
-    author_email='sam@sjkwi.com.au',
+    author='arteria GmbH,
+    author_email='admin@arteria.ch',
     description='An API for virtualenv/pip',
-    url='https://github.com/sjkingo/virtualenv-api',
+    url='https://github.com/arteria/ar-virtualenv-api',
     packages=find_packages(),
 )
