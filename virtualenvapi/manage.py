@@ -111,16 +111,34 @@ class VirtualEnvironment(object):
             self._create()
         self._ready = True
 
-    def install(self, package, force=False, upgrade=False):
+    def install(self, package, force=False, upgrade=False, options=[]):
         """Installs the given package (given in pip's package syntax)
         into this virtual environment only if it is not already installed.
         If `force` is True, force an installation. If `upgrade` is True,
         attempt to upgrade the package in question. If both `force` and
         `upgrade` are True, reinstall the package and its dependencies."""
+        
+        if not isinstance(options, list):
+            raise ValueError("Options must be a list of strings.")
+        if upgrade:
+            options += ['--upgrade']
+            if force:
+                options += ['--force-reinstall']
+        elif force:
+            options += ['--ignore-installed']
+
         if isinstance(package, list):
+            package = ['=='.join(n).lower() if isinstance(n, tuple) else n.lower() for n in package]
             for n in package:
-                self.install(n, force=force, upgrade=upgrade)
+                if not (force or upgrade) and self.is_installed(n):
+                    self._write_to_log('%s is already installed, skipping (use force=True to override)' % n)
+                    package.remove(n)
+            try:
+                self._execute([self._pip_rpath, 'install'] + package + options)
+            except subprocess.CalledProcessError as e:
+                raise PackageInstallationException((e.returncode, e.output, package))
             return
+
         if isinstance(package, tuple):
             package = '=='.join(package)
 
@@ -129,13 +147,6 @@ class VirtualEnvironment(object):
         if not (force or upgrade) and self.is_installed(package):
             self._write_to_log('%s is already installed, skipping (use force=True to override)' % package)
             return
-        options = []
-        if upgrade:
-            options += ['--upgrade']
-            if force:
-                options += ['--force-reinstall']
-        elif force:
-            options += ['--ignore-installed']
         try:
             self._execute([self._pip_rpath, 'install', package] + options)
         except subprocess.CalledProcessError as e:
@@ -145,16 +156,24 @@ class VirtualEnvironment(object):
         """Uninstalls the given package (given in pip's package syntax) from
         this virtual environment."""
         if isinstance(package, list):
+            package = ['=='.join(n).lower() if isinstance(n, tuple) else n.lower() for n in package]
             for n in package:
-                self.uninstall(n)
+                if not self.is_installed(n):
+                    package.remove(n)
+                    self._write_to_log('%s is not installed, skipping' % n)
+            try:
+                self._executef([self._pip_rpath, 'uninstall', '-y'] + package)
+            except subprocess.CalledProcessError as e:
+                raise PackageRemovalException((e.returncode, e.output, package))
             return
+
         if isinstance(package, tuple):
             package = '=='.join(package)
 
         package = package.lower()
 
         if not self.is_installed(package):
-            self._write_to_log('%s is not installed, skipping')
+            self._write_to_log('%s is not installed, skipping' % package)
             return
         try:
             self._execute([self._pip_rpath, 'uninstall', '-y', package])
