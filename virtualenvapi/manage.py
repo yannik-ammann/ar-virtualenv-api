@@ -158,7 +158,7 @@ class VirtualEnvironment(object):
         if isinstance(package, list):
             package = ['=='.join(n).lower() if isinstance(n, tuple) else n.lower() for n in package]
             for n in package:
-                if not (force or upgrade) and self.is_installed(n):
+                if not self.is_installed(n):
                     package.remove(n)
                     self._write_to_log('%s is not installed, skipping' % n)
             try:
