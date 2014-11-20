@@ -1,8 +1,10 @@
 from setuptools import find_packages, setup
 
+version = arimagebucket.__version__
+
 setup(
     name='ar-virtualenv-api',
-    version='2.0.0',
+    version=version,
     license='BSD',
     author='arteria GmbH',
     author_email='admin@arteria.ch',
