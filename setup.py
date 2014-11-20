@@ -1,6 +1,7 @@
 from setuptools import find_packages, setup
+import virtualenvapi
 
-version = arimagebucket.__version__
+version = virtualenvapi.__version__
 
 setup(
     name='ar-virtualenv-api',
