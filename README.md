@@ -101,4 +101,4 @@ file, which is appended to with each operation. Any errors are logged to `build.
 
 
 # Credits
-virtualenv-api was initally developed by Sam Kingston, adopted and adapted by arteria GmbH. The current fork has backwards compatibility and comes with a lot of new features that builds the base for [#](TODO-add virtualenv-mgr) link.
+virtualenv-api was initally developed by Sam Kingston, adopted and adapted by arteria GmbH. The current fork has backwards compatibility and comes with a lot of new features that builds the base for [virtualenv-mgr](https://github.com/arteria/virtualenv-mgr).
