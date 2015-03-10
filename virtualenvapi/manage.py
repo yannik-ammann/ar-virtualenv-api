@@ -154,7 +154,7 @@ class VirtualEnvironment(object):
         except subprocess.CalledProcessError as e:
             raise PackageInstallationException((e.returncode, e.output, package))
 
-    def uninstall(self, package):
+    def uninstall(self, package, options=[]):
         """Uninstalls the given package (given in pip's package syntax) from
         this virtual environment."""
         if isinstance(package, list):
@@ -166,7 +166,7 @@ class VirtualEnvironment(object):
             if not package:
                 return
             try:
-                self._execute([self._pip_rpath, 'uninstall', '-y'] + package)
+                self._execute([self._pip_rpath, 'uninstall', '-y'] + package + options)
             except subprocess.CalledProcessError as e:
                 raise PackageRemovalException((e.returncode, e.output, package))
             return
@@ -180,7 +180,7 @@ class VirtualEnvironment(object):
             self._write_to_log('%s is not installed, skipping' % package)
             return
         try:
-            self._execute([self._pip_rpath, 'uninstall', '-y', package])
+            self._execute([self._pip_rpath, 'uninstall', '-y', package] + options)
         except subprocess.CalledProcessError as e:
             raise PackageRemovalException((e.returncode, e.output, package))
 
